@@ -1,28 +1,27 @@
+mod generate;
 mod llm;
 mod puzzle;
+mod render;
 
-fn main() {
-    let puzzles = puzzle::load();
-    let answers = puzzle::new(&puzzles);
-    let client = reqwest::blocking::Client::new();
-    let prompt = std::fs::read_to_string("prompt.txt").expect("Failed to read prompt.txt.");
+use macroquad::prelude::*;
 
-    let mut across: Vec<String> = vec![];
-    let mut down: Vec<String> = vec![];
-    for word in &answers.across {
-        across.push(llm::chat(&client, &(prompt.clone() + &word)));
+fn conf() -> Conf {
+    Conf {
+        window_title: "Cross Magic".to_owned(),
+        fullscreen: true,
+        ..Default::default()
     }
-    for word in &answers.down {
-        down.push(llm::chat(&client, &(prompt.clone() + &word)));
-    }
-    let questions = puzzle::Square::new(&across, &down);
-    
-    println!("\n==============\n=== ACROSS ===\n==============\n");
-    for i in 0..5 {
-        println!("{}\n==>\n{}\n", questions.across[i], answers.across[i]);
-    }
-    println!("\n============\n=== DOWN ===\n============\n");
-    for i in 0..5 {
-        println!("{}\n==>\n{}\n", questions.down[i], answers.down[i]);
+}
+
+#[macroquad::main(conf)]
+async fn main() {
+    render::loading();
+    next_frame().await;
+    let (questions, answers) = generate::run();
+    loop {
+        clear_background(DARKGRAY);
+        render::letter_square(&answers);
+        render::hints(&questions);
+        next_frame().await
     }
 }
