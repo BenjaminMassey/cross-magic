@@ -1,14 +1,15 @@
 use macroquad::prelude::*;
 
-pub fn loading() {
+pub async fn loading(periods: usize) {
     clear_background(DARKGRAY);
     draw_text(
-        "Loading Content...",
-        400.0,
-        400.0,
+        &("Loading Content".to_owned() + &(String::from(".").repeat(periods))),
+        300.0,
+        300.0,
         160.0,
         WHITE,
     );
+    next_frame().await;
 }
 
 pub fn letter_square(answers: &crate::puzzle::Square) {
