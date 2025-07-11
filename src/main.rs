@@ -1,3 +1,4 @@
+mod game;
 mod generate;
 mod llm;
 mod puzzle;
@@ -42,10 +43,14 @@ async fn main() {
     let answers = answers.lock().expect("Thread error.").take().expect("Answers error.");
     let questions = questions.lock().expect("Thread error.").take().expect("Questions error.");
 
+    let mut state = game::State::new();
+
     loop {
         clear_background(DARKGRAY);
-        render::letter_square(&answers);
+        game::update(&mut state, &answers);
+        render::letter_square(&state);
         render::hints(&questions);
+        render::finished_state(&state);
         next_frame().await
     }
 }
