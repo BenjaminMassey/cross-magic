@@ -7,7 +7,13 @@ pub struct Square {
 }
 
 impl Square {
-    pub fn new(data: &[String]) -> Self {
+    pub fn new(across: &[String], down: &[String]) -> Self {
+        Self {
+            across: across.to_owned(),
+            down: down.to_owned(),
+        }
+    }
+    pub fn from_single(data: &[String]) -> Self {
         let mut down: Vec<String> = vec![];
         for i in 0..5 {
             let mut word = String::new();
@@ -21,6 +27,7 @@ impl Square {
             down,
         }
     }
+
 }
 
 pub fn load() -> Vec<Vec<String>> {
@@ -29,5 +36,5 @@ pub fn load() -> Vec<Vec<String>> {
 }
 
 pub fn new(options: &[Vec<String>]) -> Square {
-    Square::new(options.choose(&mut rand::rng()).expect("Failure to randomize."))
+    Square::from_single(options.choose(&mut rand::rng()).expect("Failure to randomize."))
 }
