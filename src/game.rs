@@ -10,10 +10,18 @@ impl State {
         let none = vec![None, None, None, None, None];
         Self {
             completed: false,
-            board: vec![none.clone(), none.clone(), none.clone(), none.clone(), none.clone()],
+            board: vec![
+                none.clone(),
+                none.clone(),
+                none.clone(),
+                none.clone(),
+                none.clone(),
+            ],
             selection: Selection {
-                x: 0, y: 0, across: true,
-            }
+                x: 0,
+                y: 0,
+                across: true,
+            },
         }
     }
 }
@@ -39,18 +47,15 @@ pub fn update(state: &mut State, answers: &crate::puzzle::Square) {
         if state.board[state.selection.y][state.selection.x].is_none() {
             if state.selection.across {
                 if state.selection.x > 0 {
-                    state.selection.x = state.selection.x - 1;
+                    state.selection.x -= 1;
                 }
-            } else {
-                if state.selection.y > 0 {
-                    state.selection.y = state.selection.y - 1;
-                }
+            } else if state.selection.y > 0 {
+                state.selection.y -= 1;
             }
         }
         state.board[state.selection.y][state.selection.x] = None;
         state.completed = false;
-    }
-    else if is_key_pressed(KeyCode::Enter) {
+    } else if is_key_pressed(KeyCode::Enter) {
         if state.selection.across {
             state.selection.x = 0;
             state.selection.y = std::cmp::min(state.selection.y + 1, 4);
@@ -58,8 +63,7 @@ pub fn update(state: &mut State, answers: &crate::puzzle::Square) {
             state.selection.x = std::cmp::min(state.selection.x + 1, 4);
             state.selection.y = 0;
         }
-    }
-    else if let Some(character) = get_char_pressed() {
+    } else if let Some(character) = get_char_pressed() {
         if "abcdefghijklmnopqrstuvwxyz".contains(character) {
             state.board[state.selection.y][state.selection.x] = Some(character);
             if state.selection.across {
@@ -78,7 +82,8 @@ pub fn update(state: &mut State, answers: &crate::puzzle::Square) {
 }
 
 fn mouse_pos_to_grid_pos(mouse: (f32, f32)) -> Option<(usize, usize)> {
-    let w = 65.0; let h = 65.0;
+    let w = 65.0;
+    let h = 65.0;
     for row in 0..5 {
         for column in 0..5 {
             let x = (row as f32 * 80.0) + 80.0;
@@ -88,7 +93,7 @@ fn mouse_pos_to_grid_pos(mouse: (f32, f32)) -> Option<(usize, usize)> {
             }
         }
     }
-    return None;
+    None
 }
 
 fn puzzle_finished(state: &State, answers: &crate::puzzle::Square) -> bool {
@@ -106,5 +111,5 @@ fn puzzle_finished(state: &State, answers: &crate::puzzle::Square) -> bool {
         }
         current.push(word);
     }
-    return target == &current;
+    target == &current
 }

@@ -27,7 +27,6 @@ impl Square {
             down,
         }
     }
-
 }
 
 pub fn load() -> Vec<Vec<String>> {
@@ -36,5 +35,9 @@ pub fn load() -> Vec<Vec<String>> {
 }
 
 pub fn new(options: &[Vec<String>]) -> Square {
-    Square::from_single(options.choose(&mut rand::rng()).expect("Failure to randomize."))
+    Square::from_single(
+        options
+            .choose(&mut rand::rng())
+            .expect("Failure to randomize."),
+    )
 }

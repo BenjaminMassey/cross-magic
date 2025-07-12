@@ -31,31 +31,13 @@ pub fn letter_square(state: &crate::game::State) {
                 BLACK
             };
             draw_rectangle(x, y, 65.0, 65.0, color);
-            if row == 0 && column != 0{
-                draw_text(
-                    &(column + 5).to_string(),
-                    x + 5.0,
-                    y + 15.0,
-                    24.0,
-                    WHITE,
-                );
+            if row == 0 && column != 0 {
+                draw_text(&(column + 5).to_string(), x + 5.0, y + 15.0, 24.0, WHITE);
             } else if column == 0 {
-                draw_text(
-                    &(row + 1).to_string(),
-                    x + 5.0,
-                    y + 15.0,
-                    24.0,
-                    WHITE,
-                );
+                draw_text(&(row + 1).to_string(), x + 5.0, y + 15.0, 24.0, WHITE);
             }
             if let Some(character) = state.board[column][row] {
-                draw_text(
-                    &character.to_string(),
-                    x + 20.0,
-                    y + 45.0,
-                    42.0,
-                    WHITE,
-                );
+                draw_text(&character.to_string(), x + 20.0, y + 45.0, 42.0, WHITE);
             }
         }
     }
@@ -65,7 +47,11 @@ pub fn hints(questions: &crate::puzzle::Square) {
     draw_text("Across", 600.0, 40.0, 42.0, WHITE);
     for i in 0..5 {
         draw_text(
-            &format!("{}. {}", if i == 0 { 1 } else { i + 5 }, &questions.across[i]),
+            &format!(
+                "{}. {}",
+                if i == 0 { 1 } else { i + 5 },
+                &questions.across[i]
+            ),
             600.0,
             (i as f32 * 26.0) + 74.0,
             22.0,
@@ -87,20 +73,8 @@ pub fn hints(questions: &crate::puzzle::Square) {
 
 pub fn finished_state(state: &crate::game::State) {
     if state.completed {
-        draw_text(
-            "Complete!",
-            160.0,
-            540.0,
-            52.0,
-            DARKGREEN,
-        );
+        draw_text("Complete!", 160.0, 540.0, 52.0, DARKGREEN);
     } else {
-        draw_text(
-            "Incomplete",
-            160.0,
-            540.0,
-            52.0,
-            MAROON,
-        );
+        draw_text("Incomplete", 160.0, 540.0, 52.0, MAROON);
     }
 }

@@ -30,7 +30,7 @@ async fn main() {
         let mut answers_lock = answers_clone.lock().unwrap();
         *answers_lock = Some(a);
     });
-    
+
     let mut i = 0;
     while questions.lock().unwrap().is_none() || answers.lock().unwrap().is_none() {
         render::loading(i).await;
@@ -40,8 +40,16 @@ async fn main() {
 
     generation.join().expect("Error with loading screen.");
 
-    let answers = answers.lock().expect("Thread error.").take().expect("Answers error.");
-    let questions = questions.lock().expect("Thread error.").take().expect("Questions error.");
+    let answers = answers
+        .lock()
+        .expect("Thread error.")
+        .take()
+        .expect("Answers error.");
+    let questions = questions
+        .lock()
+        .expect("Thread error.")
+        .take()
+        .expect("Questions error.");
 
     let mut state = game::State::new();
 

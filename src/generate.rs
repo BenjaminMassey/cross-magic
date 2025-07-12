@@ -7,10 +7,10 @@ pub fn run() -> (crate::puzzle::Square, crate::puzzle::Square) {
     let mut across: Vec<String> = vec![];
     let mut down: Vec<String> = vec![];
     for word in &answers.across {
-        across.push(crate::llm::chat(&client, &(prompt.clone() + &word)));
+        across.push(crate::llm::chat(&client, &(prompt.clone() + word)));
     }
     for word in &answers.down {
-        down.push(crate::llm::chat(&client, &(prompt.clone() + &word)));
+        down.push(crate::llm::chat(&client, &(prompt.clone() + word)));
     }
     let questions = crate::puzzle::Square::new(&across, &down);
 

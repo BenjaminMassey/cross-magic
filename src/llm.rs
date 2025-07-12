@@ -26,7 +26,8 @@ struct Response {
 pub fn chat(client: &reqwest::blocking::Client, prompt: &str) -> String {
     let body = serde_json::to_string(&Request::new(prompt)).expect("JSON to error");
     let url = "http://localhost:11434/api/generate"; // TODO: setting
-    let result = client.post(url)
+    let result = client
+        .post(url)
         .body(body)
         .send()
         .expect("LLM endpoint error");
