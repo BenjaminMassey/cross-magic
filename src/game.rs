@@ -70,14 +70,19 @@ pub fn update(state: &mut State, answers: &crate::puzzle::Square) {
             state.completed = puzzle_finished(state, answers);
         }
     }
+    if is_key_down(KeyCode::LeftControl) && is_key_pressed(KeyCode::C) {
+        for word in &answers.across {
+            println!("{word}");
+        }
+    }
 }
 
 fn mouse_pos_to_grid_pos(mouse: (f32, f32)) -> Option<(usize, usize)> {
     let w = 65.0; let h = 65.0;
     for row in 0..5 {
         for column in 0..5 {
-            let x = (row as f32 * 80.0) + 40.0;
-            let y = (column as f32 * 80.0) + 40.0;
+            let x = (row as f32 * 80.0) + 80.0;
+            let y = (column as f32 * 80.0) + 80.0;
             if mouse.0 >= x && mouse.0 <= x + w && mouse.1 >= y && mouse.1 <= y + h {
                 return Some((row, column));
             }
