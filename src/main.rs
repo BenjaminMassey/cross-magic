@@ -55,10 +55,10 @@ async fn main() {
 
     loop {
         clear_background(DARKGRAY);
-        game::update(&mut state, &answers);
         render::letter_square(&state);
         render::hints(&questions);
         render::finished_state(&state);
+        game::update(&mut state, &answers);
         next_frame().await
     }
 }

@@ -1,5 +1,6 @@
 use macroquad::prelude::*;
 
+#[derive(Clone)]
 pub struct State {
     pub completed: bool,
     pub board: Vec<Vec<Option<char>>>,
@@ -26,6 +27,7 @@ impl State {
     }
 }
 
+#[derive(Clone)]
 pub struct Selection {
     pub x: usize,
     pub y: usize,
@@ -74,10 +76,14 @@ pub fn update(state: &mut State, answers: &crate::puzzle::Square) {
             state.completed = puzzle_finished(state, answers);
         }
     }
-    if is_key_down(KeyCode::LeftControl) && is_key_pressed(KeyCode::C) {
-        for word in &answers.across {
-            println!("{word}");
-        }
+    if is_key_down(KeyCode::LeftAlt) && is_key_down(KeyCode::C) {
+        let mut cheat_state = state.clone();
+        cheat_state.board = answers
+            .across
+            .iter()
+            .map(|word| word.chars().map(Some).collect())
+            .collect();
+        crate::render::letter_square(&cheat_state);
     }
 }
 
