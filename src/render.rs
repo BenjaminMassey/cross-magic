@@ -1,11 +1,18 @@
 use macroquad::prelude::*;
 
-pub async fn loading(periods: usize) {
+pub async fn loading(periods: usize, count: usize) {
     clear_background(DARKGRAY);
     draw_text(
         &("Loading Content".to_owned() + &(String::from(".").repeat(periods))),
         300.0,
-        300.0,
+        225.0,
+        160.0,
+        WHITE,
+    );
+    draw_text(
+        &format!("{count} out of 10 generated."),
+        200.0,
+        375.0,
         160.0,
         WHITE,
     );

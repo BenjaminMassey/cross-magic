@@ -1,6 +1,6 @@
 use rand::prelude::*;
 
-#[derive(serde::Deserialize)]
+#[derive(serde::Deserialize, Clone)]
 pub struct Square {
     pub across: Vec<String>,
     pub down: Vec<String>,

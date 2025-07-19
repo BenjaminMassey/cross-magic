@@ -18,38 +18,24 @@ fn conf() -> Conf {
 
 #[macroquad::main(conf)]
 async fn main() {
-    let questions = Arc::new(Mutex::new(None::<puzzle::Square>));
-    let answers = Arc::new(Mutex::new(None::<puzzle::Square>));
+    let result = Arc::new(Mutex::new(generate::Result::default()));
 
-    let questions_clone = Arc::clone(&questions);
-    let answers_clone = Arc::clone(&answers);
+    let result_for_generation = Arc::clone(&result);
     let generation = std::thread::spawn(move || {
-        let (q, a) = generate::run();
-        let mut questions_lock = questions_clone.lock().unwrap();
-        *questions_lock = Some(q);
-        let mut answers_lock = answers_clone.lock().unwrap();
-        *answers_lock = Some(a);
+        generate::run(result_for_generation);
     });
 
     let mut i = 0;
-    while questions.lock().unwrap().is_none() || answers.lock().unwrap().is_none() {
-        render::loading(i).await;
+    while !result.lock().unwrap().complete() {
+        render::loading(i, result.lock().unwrap().count).await;
         i = (i + 1) % 4;
         std::thread::sleep(std::time::Duration::from_millis(300));
     }
 
     generation.join().expect("Error with loading screen.");
 
-    let answers = answers
-        .lock()
-        .expect("Thread error.")
-        .take()
-        .expect("Answers error.");
-    let questions = questions
-        .lock()
-        .expect("Thread error.")
-        .take()
-        .expect("Questions error.");
+    let answers = result.lock().unwrap().clone().answers.unwrap();
+    let questions = result.lock().unwrap().clone().questions.unwrap();
 
     let mut state = game::State::new();
 
