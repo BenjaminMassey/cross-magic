@@ -39,13 +39,32 @@ pub fn letter_square(state: &crate::game::State) {
                 BLACK
             };
             draw_rectangle(x, y, size * 0.813, size * 0.813, color);
+            let text_color = if selected { BLACK } else { WHITE };
             if row == 0 && column != 0 {
-                draw_text(&(column + 5).to_string(), x + (size * 0.063), y + (size * 0.188), size * 0.3, WHITE);
+                draw_text(
+                    &(column + 5).to_string(),
+                    x + (size * 0.063),
+                    y + (size * 0.188),
+                    size * 0.3,
+                    text_color,
+                );
             } else if column == 0 {
-                draw_text(&(row + 1).to_string(), x + (size * 0.063), y + (size * 0.188), size * 0.3, WHITE);
+                draw_text(
+                    &(row + 1).to_string(),
+                    x + (size * 0.063),
+                    y + (size * 0.188),
+                    size * 0.3, 
+                    text_color,
+                );
             }
             if let Some(character) = state.board[column][row] {
-                draw_text(&character.to_string(), x + (size * 0.25), y + (size * 0.563), size * 0.525, WHITE);
+                draw_text(
+                    &character.to_string(),
+                    x + (size * 0.25),
+                    y + (size * 0.563),
+                    size * 0.525,
+                    text_color,
+                );
             }
         }
     }

@@ -48,11 +48,9 @@ pub fn update(state: &mut State, answers: &crate::puzzle::Square) {
     if is_key_pressed(KeyCode::Backspace) {
         if state.board[state.selection.y][state.selection.x].is_none() {
             if state.selection.across {
-                if state.selection.x > 0 {
-                    state.selection.x -= 1;
-                }
-            } else if state.selection.y > 0 {
-                state.selection.y -= 1;
+                state.selection.x = std::cmp::max(state.selection.x, 1) - 1;
+            } else {
+                state.selection.y = std::cmp::max(state.selection.y, 1) - 1;
             }
         }
         state.board[state.selection.y][state.selection.x] = None;
@@ -65,6 +63,16 @@ pub fn update(state: &mut State, answers: &crate::puzzle::Square) {
             state.selection.x = std::cmp::min(state.selection.x + 1, 4);
             state.selection.y = 0;
         }
+    } else if is_key_pressed(KeyCode::Tab) {
+        state.selection.across = !state.selection.across;
+    } else if is_key_pressed(KeyCode::Left) {
+        state.selection.x = std::cmp::max(state.selection.x, 1) - 1;
+    } else if is_key_pressed(KeyCode::Right) {
+        state.selection.x = std::cmp::min(state.selection.x + 1, 4);
+    } else if is_key_pressed(KeyCode::Up) {
+        state.selection.y = std::cmp::max(state.selection.y, 1) - 1;
+    } else if is_key_pressed(KeyCode::Down) {
+        state.selection.y = std::cmp::min(state.selection.y + 1, 4);
     } else if let Some(character) = get_char_pressed() {
         if "abcdefghijklmnopqrstuvwxyz".contains(character) {
             state.board[state.selection.y][state.selection.x] = Some(character);
