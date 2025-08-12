@@ -53,7 +53,7 @@ pub fn letter_square(state: &crate::game::State) {
                     &(row + 1).to_string(),
                     x + (size * 0.063),
                     y + (size * 0.188),
-                    size * 0.3, 
+                    size * 0.3,
                     text_color,
                 );
             }
@@ -71,7 +71,13 @@ pub fn letter_square(state: &crate::game::State) {
 }
 
 pub fn hints(questions: &crate::puzzle::Square) {
-    draw_text("Across", screen_width() * 0.333, screen_height() * 0.067, screen_width() * 0.023, WHITE);
+    draw_text(
+        "Across",
+        screen_width() * 0.333,
+        screen_height() * 0.067,
+        screen_width() * 0.023,
+        WHITE,
+    );
     for i in 0..5 {
         draw_text(
             &format!(
@@ -86,7 +92,13 @@ pub fn hints(questions: &crate::puzzle::Square) {
         );
     }
 
-    draw_text("Down", screen_width() * 0.333, screen_height() * 0.567, screen_width() * 0.023, WHITE);
+    draw_text(
+        "Down",
+        screen_width() * 0.333,
+        screen_height() * 0.567,
+        screen_width() * 0.023,
+        WHITE,
+    );
     for i in 0..5 {
         draw_text(
             &format!("{}. {}", i + 1, &questions.down[i]),
@@ -99,11 +111,16 @@ pub fn hints(questions: &crate::puzzle::Square) {
 }
 
 pub fn finished_state(state: &crate::game::State) {
+    let (text, color) = if state.completed {
+        ("Complete!", GREEN)
+    } else {
+        ("Incomplete", RED)
+    };
     draw_text(
-        if state.completed { "Complete!"} else { "Incomplete"},
+        text,
         screen_width() * 0.089,
         screen_height() * 0.9,
         screen_width() * 0.029,
-        if state.completed { GREEN } else { RED },
+        color,
     );
 }

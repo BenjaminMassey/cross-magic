@@ -35,14 +35,14 @@ pub struct Selection {
 }
 
 pub fn update(state: &mut State, answers: &crate::puzzle::Square) {
-    if is_mouse_button_pressed(MouseButton::Left) {
-        if let Some(pos) = mouse_pos_to_grid_pos(mouse_position()) {
-            if pos == (state.selection.x, state.selection.y) {
-                state.selection.across = !state.selection.across;
-            } else {
-                state.selection.x = pos.0;
-                state.selection.y = pos.1;
-            }
+    if is_mouse_button_pressed(MouseButton::Left)
+        && let Some(pos) = mouse_pos_to_grid_pos(mouse_position())
+    {
+        if pos == (state.selection.x, state.selection.y) {
+            state.selection.across = !state.selection.across;
+        } else {
+            state.selection.x = pos.0;
+            state.selection.y = pos.1;
         }
     }
     if is_key_pressed(KeyCode::Backspace) {
@@ -73,16 +73,16 @@ pub fn update(state: &mut State, answers: &crate::puzzle::Square) {
         state.selection.y = std::cmp::max(state.selection.y, 1) - 1;
     } else if is_key_pressed(KeyCode::Down) {
         state.selection.y = std::cmp::min(state.selection.y + 1, 4);
-    } else if let Some(character) = get_char_pressed() {
-        if "abcdefghijklmnopqrstuvwxyz".contains(character) {
-            state.board[state.selection.y][state.selection.x] = Some(character);
-            if state.selection.across {
-                state.selection.x = std::cmp::min(state.selection.x + 1, 4);
-            } else {
-                state.selection.y = std::cmp::min(state.selection.y + 1, 4);
-            }
-            state.completed = puzzle_finished(state, answers);
+    } else if let Some(character) = get_char_pressed()
+        && "abcdefghijklmnopqrstuvwxyz".contains(character)
+    {
+        state.board[state.selection.y][state.selection.x] = Some(character);
+        if state.selection.across {
+            state.selection.x = std::cmp::min(state.selection.x + 1, 4);
+        } else {
+            state.selection.y = std::cmp::min(state.selection.y + 1, 4);
         }
+        state.completed = puzzle_finished(state, answers);
     }
     if is_key_down(KeyCode::LeftAlt) && is_key_down(KeyCode::C) {
         let mut cheat_state = state.clone();

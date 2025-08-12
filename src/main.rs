@@ -27,7 +27,8 @@ async fn main() {
 
     let mut i = 0;
     while !result.lock().unwrap().complete() {
-        render::loading(i, result.lock().unwrap().count).await;
+        let count = result.lock().unwrap().count;
+        render::loading(i, count).await;
         i = (i + 1) % 4;
         std::thread::sleep(std::time::Duration::from_millis(300));
     }
