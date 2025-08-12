@@ -4,26 +4,27 @@ pub async fn loading(periods: usize, count: usize) {
     clear_background(DARKGRAY);
     draw_text(
         &("Loading Content".to_owned() + &(String::from(".").repeat(periods))),
-        300.0,
-        225.0,
-        160.0,
+        screen_width() * 0.167,
+        screen_height() * 0.375,
+        screen_width() * 0.089,
         WHITE,
     );
     draw_text(
         &format!("{count} out of 10 generated."),
-        200.0,
-        375.0,
-        160.0,
+        screen_width() * 0.111,
+        screen_height() * 0.625,
+        screen_width() * 0.089,
         WHITE,
     );
     next_frame().await;
 }
 
 pub fn letter_square(state: &crate::game::State) {
+    let size = screen_width() * 0.044;
     for row in 0..5 {
         for column in 0..5 {
-            let x = (row as f32 * 80.0) + 80.0;
-            let y = (column as f32 * 80.0) + 80.0;
+            let x = (row as f32 * size) + size;
+            let y = (column as f32 * size) + size;
             let inline = if state.selection.across {
                 state.selection.y == column
             } else {
@@ -37,21 +38,21 @@ pub fn letter_square(state: &crate::game::State) {
             } else {
                 BLACK
             };
-            draw_rectangle(x, y, 65.0, 65.0, color);
+            draw_rectangle(x, y, size * 0.813, size * 0.813, color);
             if row == 0 && column != 0 {
-                draw_text(&(column + 5).to_string(), x + 5.0, y + 15.0, 24.0, WHITE);
+                draw_text(&(column + 5).to_string(), x + (size * 0.063), y + (size * 0.188), size * 0.3, WHITE);
             } else if column == 0 {
-                draw_text(&(row + 1).to_string(), x + 5.0, y + 15.0, 24.0, WHITE);
+                draw_text(&(row + 1).to_string(), x + (size * 0.063), y + (size * 0.188), size * 0.3, WHITE);
             }
             if let Some(character) = state.board[column][row] {
-                draw_text(&character.to_string(), x + 20.0, y + 45.0, 42.0, WHITE);
+                draw_text(&character.to_string(), x + (size * 0.25), y + (size * 0.563), size * 0.525, WHITE);
             }
         }
     }
 }
 
 pub fn hints(questions: &crate::puzzle::Square) {
-    draw_text("Across", 600.0, 40.0, 42.0, WHITE);
+    draw_text("Across", screen_width() * 0.333, screen_height() * 0.067, screen_width() * 0.023, WHITE);
     for i in 0..5 {
         draw_text(
             &format!(
@@ -59,29 +60,31 @@ pub fn hints(questions: &crate::puzzle::Square) {
                 if i == 0 { 1 } else { i + 5 },
                 &questions.across[i]
             ),
-            600.0,
-            (i as f32 * 26.0) + 74.0,
-            22.0,
+            screen_width() * 0.333,
+            (i as f32 * (screen_height() * 0.043)) + (screen_height() * 0.123),
+            screen_width() * 0.012,
             WHITE,
         );
     }
 
-    draw_text("Down", 600.0, 340.0, 42.0, WHITE);
+    draw_text("Down", screen_width() * 0.333, screen_height() * 0.567, screen_width() * 0.023, WHITE);
     for i in 0..5 {
         draw_text(
             &format!("{}. {}", i + 1, &questions.down[i]),
-            600.0,
-            (i as f32 * 26.0) + 374.0,
-            22.0,
+            screen_width() * 0.333,
+            (i as f32 * (screen_height() * 0.043)) + (screen_height() * 0.623),
+            screen_width() * 0.012,
             WHITE,
         );
     }
 }
 
 pub fn finished_state(state: &crate::game::State) {
-    if state.completed {
-        draw_text("Complete!", 160.0, 540.0, 52.0, DARKGREEN);
-    } else {
-        draw_text("Incomplete", 160.0, 540.0, 52.0, MAROON);
-    }
+    draw_text(
+        if state.completed { "Complete!"} else { "Incomplete"},
+        screen_width() * 0.089,
+        screen_height() * 0.9,
+        screen_width() * 0.029,
+        if state.completed { GREEN } else { RED },
+    );
 }

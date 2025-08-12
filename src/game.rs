@@ -88,13 +88,13 @@ pub fn update(state: &mut State, answers: &crate::puzzle::Square) {
 }
 
 fn mouse_pos_to_grid_pos(mouse: (f32, f32)) -> Option<(usize, usize)> {
-    let w = 65.0;
-    let h = 65.0;
+    let cell_size = screen_width() * 0.044;
+    let size = cell_size * 0.813;
     for row in 0..5 {
         for column in 0..5 {
-            let x = (row as f32 * 80.0) + 80.0;
-            let y = (column as f32 * 80.0) + 80.0;
-            if mouse.0 >= x && mouse.0 <= x + w && mouse.1 >= y && mouse.1 <= y + h {
+            let x = (row as f32 * cell_size) + cell_size;
+            let y = (column as f32 * cell_size) + cell_size;
+            if mouse.0 >= x && mouse.0 <= x + size && mouse.1 >= y && mouse.1 <= y + size {
                 return Some((row, column));
             }
         }
