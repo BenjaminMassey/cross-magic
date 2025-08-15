@@ -19,7 +19,11 @@ impl Result {
     }
 }
 
-pub fn run(result: Arc<Mutex<Result>>) {
+fn make_prompt(prompt: &str, word: &str) -> String {
+    prompt.replace("{{word}}", &format!(r#""{word}""#))
+}
+
+pub fn run(model: &str, result: Arc<Mutex<Result>>) {
     let puzzles = crate::puzzle::load();
     let answers = crate::puzzle::new(&puzzles);
     let client = reqwest::blocking::Client::new();
@@ -29,13 +33,21 @@ pub fn run(result: Arc<Mutex<Result>>) {
     let mut across: Vec<String> = vec![];
     let mut down: Vec<String> = vec![];
     for word in &answers.across {
-        across.push(crate::llm::chat(&client, &(prompt.clone() + word)));
+        across.push(crate::llm::chat(
+            model,
+            &client,
+            &make_prompt(&prompt, word),
+        ));
         count += 1;
         let mut result_lock = result.lock().unwrap();
         result_lock.count = count;
     }
     for word in &answers.down {
-        down.push(crate::llm::chat(&client, &(prompt.clone() + word)));
+        down.push(crate::llm::chat(
+            model,
+            &client,
+            &make_prompt(&prompt, word),
+        ));
         count += 1;
         let mut result_lock = result.lock().unwrap();
         result_lock.count = count;

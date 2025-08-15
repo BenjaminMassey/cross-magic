@@ -8,9 +8,9 @@ struct Request {
     think: bool,
 }
 impl Request {
-    fn new(prompt: &str) -> Self {
+    fn new(model: &str, prompt: &str) -> Self {
         Self {
-            model: "qwen3".to_owned(), // TODO: setting
+            model: model.to_owned(),
             prompt: prompt.to_owned(),
             stream: false,
             think: false, // TODO: maybe wanted, but then need parsing
@@ -23,8 +23,8 @@ struct Response {
     response: Option<String>,
 }
 
-pub fn chat(client: &reqwest::blocking::Client, prompt: &str) -> String {
-    let body = serde_json::to_string(&Request::new(prompt)).expect("JSON to error");
+pub fn chat(model: &str, client: &reqwest::blocking::Client, prompt: &str) -> String {
+    let body = serde_json::to_string(&Request::new(model, prompt)).expect("JSON to error");
     let url = "http://localhost:11434/api/generate"; // TODO: setting
     let result = client
         .post(url)

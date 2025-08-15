@@ -5,24 +5,43 @@ mod puzzle;
 mod render;
 
 use macroquad::prelude::*;
+use serde::Deserialize;
+use std::fs::read_to_string;
 use std::sync::{Arc, Mutex};
+use toml::from_str as to_toml;
 
-fn conf() -> Conf {
-    Conf {
-        window_title: "Cross Magic".to_owned(),
-        window_width: 1800,
-        window_height: 600,
-        ..Default::default()
-    }
+#[derive(Deserialize)]
+struct LlmConfig {
+    model: String,
+}
+ 
+#[derive(Deserialize)]
+struct DisplayConfig {
+    width: usize,
+    height: usize,
 }
 
-#[macroquad::main(conf)]
+#[derive(Deserialize)]
+struct CmConfig {
+    display: DisplayConfig,
+    llm: LlmConfig,
+}
+
+#[macroquad::main("Cross Magic")]
 async fn main() {
+    let toml = read_to_string("crossmagic.toml").unwrap();
+    let config: CmConfig = to_toml(&toml).unwrap();
+
+    request_new_screen_size(
+        config.display.width as f32,
+        config.display.height as f32,
+    );
+
     let result = Arc::new(Mutex::new(generate::Result::default()));
 
     let result_for_generation = Arc::clone(&result);
     let generation = std::thread::spawn(move || {
-        generate::run(result_for_generation);
+        generate::run(&config.llm.model, result_for_generation);
     });
 
     let mut i = 0;
