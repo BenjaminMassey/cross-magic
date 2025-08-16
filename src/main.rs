@@ -1,6 +1,5 @@
 mod game;
 mod generate;
-mod llm;
 mod puzzle;
 mod render;
 

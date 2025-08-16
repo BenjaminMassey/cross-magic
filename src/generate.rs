@@ -22,20 +22,19 @@ impl Result {
 pub fn run(result: Arc<Mutex<Result>>) {
     let puzzles = crate::puzzle::load();
     let answers = crate::puzzle::new(&puzzles);
-    let client = reqwest::blocking::Client::new();
     let prompt = std::fs::read_to_string("prompt.txt").expect("Failed to read prompt.txt.");
 
     let mut count: usize = 0;
     let mut across: Vec<String> = vec![];
     let mut down: Vec<String> = vec![];
     for word in &answers.across {
-        across.push(crate::llm::chat(&client, &(prompt.clone() + word)));
+        across.push(ollama_embed::chat(&(prompt.clone() + word)));
         count += 1;
         let mut result_lock = result.lock().unwrap();
         result_lock.count = count;
     }
     for word in &answers.down {
-        down.push(crate::llm::chat(&client, &(prompt.clone() + word)));
+        down.push(ollama_embed::chat(&(prompt.clone() + word)));
         count += 1;
         let mut result_lock = result.lock().unwrap();
         result_lock.count = count;
