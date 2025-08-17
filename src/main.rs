@@ -2,15 +2,10 @@ mod game;
 mod generate;
 mod puzzle;
 mod render;
-mod ui;
-mod widgets;
-mod game_widgets;
 
 use macroquad::prelude::*;
 use std::sync::{Arc, Mutex};
-use ui::*;
-use widgets::*;
-use game_widgets::*;
+use cross_magic_ui::*;
 
 fn conf() -> Conf {
     Conf {
@@ -94,6 +89,6 @@ fn build_game_ui() -> UIManager {
     .add_child(Box::new(Button::new(100, "New Game")
         .with_size(150.0, 50.0)));
     
-    ui_manager.set_root(root);
+    ui_manager.set_root(Box::new(root));
     ui_manager
 }

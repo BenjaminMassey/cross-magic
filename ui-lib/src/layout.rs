@@ -1,91 +1,16 @@
+//! Layout system for organizing widgets in containers.
+
+use crate::core::*;
 use macroquad::prelude::*;
-use std::collections::HashMap;
 
-#[derive(Debug, Clone, Copy, PartialEq)]
-pub struct UIRect {
-    pub x: f32,
-    pub y: f32,
-    pub width: f32,
-    pub height: f32,
-}
-
-impl UIRect {
-    pub fn new(x: f32, y: f32, width: f32, height: f32) -> Self {
-        Self { x, y, width, height }
-    }
-
-    pub fn contains_point(&self, x: f32, y: f32) -> bool {
-        x >= self.x && x <= self.x + self.width && y >= self.y && y <= self.y + self.height
-    }
-
-    pub fn center(&self) -> (f32, f32) {
-        (self.x + self.width / 2.0, self.y + self.height / 2.0)
-    }
-}
-
-#[derive(Debug, Clone)]
-pub struct Input {
-    pub mouse_pos: (f32, f32),
-    pub mouse_pressed: bool,
-    pub mouse_released: bool,
-    pub keys_pressed: Vec<KeyCode>,
-    pub chars_pressed: Vec<char>,
-}
-
-impl Input {
-    pub fn new() -> Self {
-        Self {
-            mouse_pos: (0.0, 0.0),
-            mouse_pressed: false,
-            mouse_released: false,
-            keys_pressed: Vec::new(),
-            chars_pressed: Vec::new(),
-        }
-    }
-
-    pub fn update(&mut self) {
-        self.mouse_pos = mouse_position();
-        self.mouse_pressed = is_mouse_button_pressed(MouseButton::Left);
-        self.mouse_released = is_mouse_button_released(MouseButton::Left);
-        
-        self.keys_pressed.clear();
-        self.chars_pressed.clear();
-        
-        // Only track specific keys for UI, don't consume character input
-        for key in [KeyCode::Enter, KeyCode::Backspace, KeyCode::Tab, KeyCode::Left, 
-                   KeyCode::Right, KeyCode::Up, KeyCode::Down] {
-            if is_key_pressed(key) {
-                self.keys_pressed.push(key);
-            }
-        }
-        
-        // Don't consume get_char_pressed() here - let the game handle it
-    }
-}
-
-pub type WidgetId = usize;
-
-pub trait Widget {
-    fn update(&mut self, input: &Input) -> Option<WidgetEvent>;
-    fn render(&self);
-    fn bounds(&self) -> UIRect;
-    fn set_bounds(&mut self, bounds: UIRect);
-    fn id(&self) -> WidgetId;
-}
-
-#[derive(Debug, Clone)]
-pub enum WidgetEvent {
-    ButtonClicked(WidgetId),
-    TextChanged(WidgetId, String),
-    Custom(String, WidgetId),
-}
-
+/// Direction for flex layout
 #[derive(Debug, Clone)]
 pub enum FlexDirection {
     Row,
     Column,
 }
 
+/// Alignment options for layout
 #[derive(Debug, Clone)]
 pub enum Alignment {
     Start,
@@ -93,24 +18,29 @@ pub enum Alignment {
     End,
 }
 
+/// Layout types for containers
 #[derive(Debug, Clone)]
 pub enum Layout {
+    /// Flex layout with direction, gap, and alignment
     Flex {
         direction: FlexDirection,
         gap: f32,
         align: Alignment,
     },
+    /// Grid layout with columns, rows, and gap
     Grid {
         cols: usize,
         rows: usize,
         gap: f32,
     },
+    /// Absolute positioning with offset from parent
     Absolute {
         x: f32,
         y: f32,
     },
 }
 
+/// Container widget that can hold and layout other widgets
 pub struct UIContainer {
     id: WidgetId,
     bounds: UIRect,
@@ -120,6 +50,7 @@ pub struct UIContainer {
 }
 
 impl UIContainer {
+    /// Create a new container with the specified layout
     pub fn new(id: WidgetId, layout: Layout) -> Self {
         Self {
             id,
@@ -130,11 +61,13 @@ impl UIContainer {
         }
     }
 
+    /// Add padding to the container
     pub fn with_padding(mut self, padding: f32) -> Self {
         self.padding = padding;
         self
     }
 
+    /// Add a child widget to the container
     pub fn add_child(mut self, child: Box<dyn Widget>) -> Self {
         self.children.push(child);
         self
@@ -254,59 +187,5 @@ impl Widget for UIContainer {
 
     fn id(&self) -> WidgetId {
         self.id
-    }
-}
-
-pub struct UIManager {
-    root: UIContainer,
-    input: Input,
-    events: Vec<WidgetEvent>,
-    next_widget_id: WidgetId,
-}
-
-impl UIManager {
-    pub fn new() -> Self {
-        Self {
-            root: UIContainer::new(0, Layout::Flex { 
-                direction: FlexDirection::Column, 
-                gap: 0.0, 
-                align: Alignment::Start 
-            }),
-            input: Input::new(),
-            events: Vec::new(),
-            next_widget_id: 1,
-        }
-    }
-
-    pub fn next_id(&mut self) -> WidgetId {
-        let id = self.next_widget_id;
-        self.next_widget_id += 1;
-        id
-    }
-
-    pub fn set_root(&mut self, root: UIContainer) {
-        self.root = root;
-    }
-
-    pub fn update(&mut self) {
-        self.input.update();
-        self.root.set_bounds(UIRect::new(0.0, 0.0, screen_width(), screen_height()));
-        
-        self.events.clear();
-        if let Some(event) = self.root.update(&self.input) {
-            self.events.push(event);
-        }
-    }
-
-    pub fn render(&self) {
-        self.root.render();
-    }
-
-    pub fn get_events(&self) -> &[WidgetEvent] {
-        &self.events
-    }
-
-    pub fn input(&self) -> &Input {
-        &self.input
     }
 }

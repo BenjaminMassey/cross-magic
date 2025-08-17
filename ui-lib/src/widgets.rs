@@ -1,6 +1,9 @@
-use crate::ui::*;
+//! Built-in widgets including Button, Text, and Panel.
+
+use crate::core::*;
 use macroquad::prelude::*;
 
+/// Button state for visual feedback
 #[derive(Debug, Clone)]
 pub enum ButtonState {
     Normal,
@@ -8,6 +11,7 @@ pub enum ButtonState {
     Pressed,
 }
 
+/// A clickable button widget with text
 pub struct Button {
     id: WidgetId,
     bounds: UIRect,
@@ -17,6 +21,7 @@ pub struct Button {
 }
 
 impl Button {
+    /// Create a new button with the given ID and text
     pub fn new(id: WidgetId, text: impl Into<String>) -> Self {
         Self {
             id,
@@ -27,12 +32,14 @@ impl Button {
         }
     }
 
+    /// Set the size of the button
     pub fn with_size(mut self, width: f32, height: f32) -> Self {
         self.bounds.width = width;
         self.bounds.height = height;
         self
     }
 
+    /// Set whether the button is enabled
     pub fn enabled(mut self, enabled: bool) -> Self {
         self.enabled = enabled;
         self
@@ -100,6 +107,15 @@ impl Widget for Button {
     }
 }
 
+/// Text alignment options
+#[derive(Debug, Clone)]
+pub enum TextAlignment {
+    Left,
+    Center,
+    Right,
+}
+
+/// A text display widget
 pub struct Text {
     id: WidgetId,
     bounds: UIRect,
@@ -109,14 +125,8 @@ pub struct Text {
     alignment: TextAlignment,
 }
 
-#[derive(Debug, Clone)]
-pub enum TextAlignment {
-    Left,
-    Center,
-    Right,
-}
-
 impl Text {
+    /// Create a new text widget
     pub fn new(id: WidgetId, text: impl Into<String>) -> Self {
         Self {
             id,
@@ -128,21 +138,25 @@ impl Text {
         }
     }
 
+    /// Set the text color
     pub fn with_color(mut self, color: Color) -> Self {
         self.color = color;
         self
     }
 
+    /// Set the font size
     pub fn with_font_size(mut self, size: f32) -> Self {
         self.font_size = size;
         self
     }
 
+    /// Set the text alignment
     pub fn with_alignment(mut self, alignment: TextAlignment) -> Self {
         self.alignment = alignment;
         self
     }
 
+    /// Update the text content
     pub fn set_text(&mut self, text: impl Into<String>) {
         self.text = text.into();
     }
@@ -180,6 +194,7 @@ impl Widget for Text {
     }
 }
 
+/// A rectangular panel widget with background and optional border
 pub struct Panel {
     id: WidgetId,
     bounds: UIRect,
@@ -189,6 +204,7 @@ pub struct Panel {
 }
 
 impl Panel {
+    /// Create a new panel
     pub fn new(id: WidgetId) -> Self {
         Self {
             id,
@@ -199,17 +215,20 @@ impl Panel {
         }
     }
 
+    /// Set the background color
     pub fn with_background(mut self, color: Color) -> Self {
         self.background_color = color;
         self
     }
 
+    /// Set the border color and width
     pub fn with_border(mut self, color: Color, width: f32) -> Self {
         self.border_color = Some(color);
         self.border_width = width;
         self
     }
 
+    /// Remove the border
     pub fn no_border(mut self) -> Self {
         self.border_color = None;
         self
