@@ -112,8 +112,8 @@ impl UIContainer {
                 let child_width = (bounds.width - total_gap) / self.children.len() as f32;
                 let start_y = match align {
                     Alignment::Start => bounds.y,
-                    Alignment::Center => bounds.y + (bounds.height - bounds.height) / 2.0,
-                    Alignment::End => bounds.y + bounds.height - bounds.height,
+                    Alignment::Center => bounds.y,
+                    Alignment::End => bounds.y,
                 };
 
                 for (i, child) in self.children.iter_mut().enumerate() {
@@ -125,8 +125,8 @@ impl UIContainer {
                 let child_height = (bounds.height - total_gap) / self.children.len() as f32;
                 let start_x = match align {
                     Alignment::Start => bounds.x,
-                    Alignment::Center => bounds.x + (bounds.width - bounds.width) / 2.0,
-                    Alignment::End => bounds.x + bounds.width - bounds.width,
+                    Alignment::Center => bounds.x,
+                    Alignment::End => bounds.x,
                 };
 
                 for (i, child) in self.children.iter_mut().enumerate() {
