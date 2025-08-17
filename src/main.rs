@@ -82,12 +82,20 @@ async fn generate_new_puzzle() -> (crate::puzzle::Square, crate::puzzle::Square)
 fn build_game_ui() -> UIManager {
     let mut ui_manager = UIManager::new();
     
+    // Position button in lower-right corner with padding from edges
+    let button_width = 100.0;
+    let button_height = 35.0;
+    let padding = 20.0;
+    
     let root = UIContainer::new(
         ui_manager.next_id(),
-        Layout::Absolute { x: 0.0, y: 0.0 }
+        Layout::Absolute { 
+            x: screen_width() - button_width - padding, 
+            y: screen_height() - button_height - padding 
+        }
     )
     .add_child(Box::new(Button::new(100, "New Game")
-        .with_size(150.0, 50.0)));
+        .with_size(button_width, button_height)));
     
     ui_manager.set_root(Box::new(root));
     ui_manager
