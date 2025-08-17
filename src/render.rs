@@ -124,3 +124,30 @@ pub fn finished_state(state: &crate::game::State) {
         color,
     );
 }
+
+pub fn new_game_button() -> bool {
+    let button_x = screen_width() * 0.8;
+    let button_y = screen_height() * 0.85;
+    let button_width = screen_width() * 0.15;
+    let button_height = screen_height() * 0.08;
+    
+    let mouse_pos = mouse_position();
+    let mouse_over = mouse_pos.0 >= button_x && mouse_pos.0 <= button_x + button_width 
+                    && mouse_pos.1 >= button_y && mouse_pos.1 <= button_y + button_height;
+    
+    let button_color = if mouse_over { LIGHTGRAY } else { GRAY };
+    let text_color = if mouse_over { BLACK } else { WHITE };
+    
+    draw_rectangle(button_x, button_y, button_width, button_height, button_color);
+    draw_rectangle_lines(button_x, button_y, button_width, button_height, 2.0, WHITE);
+    
+    draw_text(
+        "New Game",
+        button_x + button_width * 0.15,
+        button_y + button_height * 0.65,
+        screen_width() * 0.02,
+        text_color,
+    );
+    
+    mouse_over && is_mouse_button_pressed(MouseButton::Left)
+}

@@ -17,6 +17,27 @@ fn conf() -> Conf {
 
 #[macroquad::main(conf)]
 async fn main() {
+    loop {
+        let (answers, questions) = generate_new_puzzle().await;
+        let mut state = game::State::new();
+
+        loop {
+            clear_background(DARKGRAY);
+            render::letter_square(&state);
+            render::hints(&questions);
+            render::finished_state(&state);
+            
+            if render::new_game_button() {
+                break;
+            }
+            
+            game::update(&mut state, &answers);
+            next_frame().await
+        }
+    }
+}
+
+async fn generate_new_puzzle() -> (crate::puzzle::Square, crate::puzzle::Square) {
     let result = Arc::new(Mutex::new(generate::Result::default()));
 
     let result_for_generation = Arc::clone(&result);
@@ -36,15 +57,6 @@ async fn main() {
 
     let answers = result.lock().unwrap().clone().answers.unwrap();
     let questions = result.lock().unwrap().clone().questions.unwrap();
-
-    let mut state = game::State::new();
-
-    loop {
-        clear_background(DARKGRAY);
-        render::letter_square(&state);
-        render::hints(&questions);
-        render::finished_state(&state);
-        game::update(&mut state, &answers);
-        next_frame().await
-    }
+    
+    (answers, questions)
 }
