@@ -14,11 +14,11 @@ Using macroquad for rendering and ollama for generation.
 
 Word squares were generated from this project: https://github.com/BartMassey/ws5
 
-## Requirements
+## LLM Information
 
-Install ollama from https://ollama.com/. Make sure to run it in the background, where it should be hosting an API server by default.
+This program uses [ollama](https://www.ollama.com) to run [the Qwen3 model](https://huggingface.co/Qwen/Qwen3-8B) via [the `ollama_embed` crate](https://www.github.com/BenjaminMassey/ollama_embed).
 
-Currently, Cross Magic assumes the usage of the qwen3 model as an LLM. You may need to add this to ollama via the `ollama pull qwen3` command, first.
+While you should follow `ollama_embed`'s details for up-to-date info, it currently should be noted that the first `cargo build` of this crate will involve downloading `ollama`, and the first `cargo run` of this crate will involve downloading the `qwen3` model via `ollama`. These will both take a while, but will not have to happen after the initial times: future plans in this regard TBD.
 
 ## Contact
 

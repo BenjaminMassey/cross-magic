@@ -1,1 +1,6 @@
 /target
+
+/ollama-model/*.gguf
+/ollama-win
+/ollama-lin
+/deployments
