@@ -216,12 +216,20 @@ dependencies = [
 name = "cross-magic"
 version = "0.1.0"
 dependencies = [
+ "cross-magic-ui",
  "macroquad",
  "ollama_embed",
  "rand",
  "reqwest",
  "serde",
  "serde_json",
+]
+
+[[package]]
+name = "cross-magic-ui"
+version = "0.1.0"
+dependencies = [
+ "macroquad",
 ]
 
 [[package]]
@@ -1059,6 +1067,7 @@ dependencies = [
 [[package]]
 name = "ollama_embed"
 version = "0.1.0"
+source = "git+https://www.github.com/BenjaminMassey/ollama_embed#0ccff43a63ca4d813732d51643b9abf69dbfbc61"
 dependencies = [
  "flate2",
  "gag",
