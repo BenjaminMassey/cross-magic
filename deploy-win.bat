@@ -8,6 +8,6 @@ set DATETIME=%YEAR%-%MONTH%-%DAY%_%HOUR%-%MINUTE%-%SECOND%
 cargo build --release
 set BUILDDIR=deployments\windows\build_%DATETIME%
 mkdir %BUILDDIR%
-xcopy "ollama-win" "%BUILDDIR%\ollama-win\" /s /e
-xcopy "ollama-model" "%BUILDDIR%\ollama-model\" /s /e
+xcopy "llama-windows" "%BUILDDIR%\llama-windows\" /s /e
+xcopy "llama-model" "%BUILDDIR%\llama-model\" /s /e
 copy "target\release\*.exe" "%BUILDDIR%"

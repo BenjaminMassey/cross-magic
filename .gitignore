@@ -1,6 +1,5 @@
 /target
-
-/ollama-model/*.gguf
-/ollama-win
-/ollama-lin
 /deployments
+/llama-model/*.gguf
+/llama-windows
+/llama-linux

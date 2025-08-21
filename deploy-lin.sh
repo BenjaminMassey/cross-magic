@@ -12,8 +12,8 @@ BUILDDIR="deployments/linux/build_$DATETIME"
 mkdir -p "$BUILDDIR"
 
 # Copy required folders
-cp -r "ollama-lin" "$BUILDDIR/ollama-lin"
-cp -r "ollama-model" "$BUILDDIR/ollama-model"
+cp -r "llama-lin" "$BUILDDIR/llama-linux"
+cp -r "llama-model" "$BUILDDIR/llama-model"
 
 # Copy compiled executables
 cp target/release/*.exe "$BUILDDIR" 2>/dev/null || true

@@ -31,18 +31,24 @@ pub fn run(result: Arc<Mutex<Result>>) {
     let mut count: usize = 0;
     let mut across: Vec<String> = vec![];
     let mut down: Vec<String> = vec![];
+    let mut model = llamacpp_embed::start(
+        "./llama-model/Qwen3-14B-UD-IQ2_M.gguf",
+        "You are a crossword assistant who helps create engaging word clues.",
+    );
     for word in &answers.across {
-        across.push(ollama_embed::chat(&make_prompt(&prompt, word)));
+        across.push(llamacpp_embed::chat(&mut model, &make_prompt(&prompt, word)));
         count += 1;
         let mut result_lock = result.lock().unwrap();
         result_lock.count = count;
     }
     for word in &answers.down {
-        down.push(ollama_embed::chat(&make_prompt(&prompt, word)));
+        down.push(llamacpp_embed::chat(&mut model, &make_prompt(&prompt, word)));
         count += 1;
         let mut result_lock = result.lock().unwrap();
         result_lock.count = count;
     }
+    llamacpp_embed::stop(&mut model);
+
     let questions = crate::puzzle::Square::new(&across, &down);
 
     let mut result_lock = result.lock().unwrap();
